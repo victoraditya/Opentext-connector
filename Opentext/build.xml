@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Opentext" basedir="." default="dist">
+	
+    <property environment="env"/>
+
+    <property name="project.version" value="1.1"/>
+
+    <property name="filename.sources" value="src"/>
+    <property name="filename.classes" value="classes"/>
+    <property name="filename.distrib" value="dist"/>
+    <property name="AXIS2_HOME"  value="../../third-party/axis2"/>
+    <property name="path.axis2.home" value="${AXIS2_HOME}"/>
+    <property name="path.sources" value="${basedir}/${filename.sources}"/>
+    <property name="path.distrib" value="${basedir}/${filename.distrib}/${ant.project.name}"/>
+    <property name="path.generated.classes" value="${path.distrib}/${filename.classes}"/>
+	
+	<fileset id="fs.dependency.local" dir="${basedir}">
+		<include name="**/*.jar"/>
+	</fileset>
+	<fileset id="fs.dependency.opentext" dir="../../third-party/">
+		<include name="**/*.jar"/>
+	</fileset>
+	<fileset id="fs.dependency.third-party" dir="${path.axis2.home}">
+        <include name="lib/*.jar"/>
+	</fileset>
+	<fileset id="fs.dependency.kcsvc" dir="../../core">
+		<include name="lib/*.jar"/>
+		<include name="resources/tomcat/lib/*.jar"/>
+		<include name="dist/KazConnectorSvc.aar"/>
+	</fileset>
+	<fileset id="fs.dependency.utils" dir="../../Utils/dist">
+		<include name="*.jar"/>
+	</fileset>
+	
+	<path id="cp.all.dependency" >
+		<fileset refid="fs.dependency.local" />
+		<fileset refid="fs.dependency.opentext" />
+		<fileset refid="fs.dependency.third-party" />
+		<fileset refid="fs.dependency.kcsvc" />
+		<fileset refid="fs.dependency.utils" />
+		
+	</path>
+
+    <target name="clean">
+        <delete dir="${path.distrib}"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${path.distrib}"/>
+        <mkdir dir="${path.distrib}/${filename.classes}"/>
+    </target>
+
+    <target name="compile" depends="init">
+        <javac debug="on" includeantruntime="false" source="1.7" target="1.7" destdir="${path.generated.classes}" encoding="ISO-8859-1">
+            <src path="${path.sources}"/>
+            <classpath refid="cp.all.dependency"/>
+        </javac>
+    </target>
+
+    <target name="dist" depends="compile">
+        <copy toDir="${path.generated.classes}">
+            <fileset dir="${path.sources}">
+            	<include name="**/*"/>
+            	<exclude name="**/*.java"/>
+            </fileset>
+        </copy>
+    	<echo message="Build complete for ${ant.project.name}"></echo>
+	</target>
+	
+	
+</project>

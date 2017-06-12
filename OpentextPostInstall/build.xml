@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="OpentextPostInstall" basedir="." default="jar">
+
+    <property name="path.resources" value="${basedir}/resources"/>
+    <property name="path.distrib" value="${basedir}/dist"/>
+
+    <target name="clean">
+        <delete dir="${path.distrib}"/>
+    </target>
+
+    <target name="init" depends="clean">
+        <mkdir dir="${path.distrib}"/>
+    </target>
+	
+	 <target name="jar" depends="compile">
+	    	<jar destfile="${path.distrib}/PostInstall.jar" encoding="UTF-8" >
+				<manifest>
+					<attribute name="Release-Version" value="${project.version}" />
+					<attribute name="Main-Class" value="com.emc.kazeon.connector.dctm.Installer" />
+				</manifest>
+				<fileset dir="${path.resources}" >
+					<include name="**/*" />
+				</fileset>
+	    	</jar>
+    	<echo message="Build complete for ${ant.project.name}"></echo>
+	</target>
+	
+</project>
